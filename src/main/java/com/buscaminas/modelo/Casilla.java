@@ -1,6 +1,10 @@
 package main.java.com.buscaminas.modelo;
 
-public class Casilla {
+import java.io.Serializable;
+
+public class Casilla implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private boolean tieneMina;
     private boolean descubierta;
     private boolean marcada;

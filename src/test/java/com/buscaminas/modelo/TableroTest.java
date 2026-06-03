@@ -52,8 +52,10 @@ class TableroTest {
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
                 if (!tablero.getCasilla(i, j).tieneMina()) {
-                    tablero.descubrirCasilla(i, j);
-                    assertThrows(CasillaYaDescubiertaException.class, () -> tablero.descubrirCasilla(i, j));
+                    final int finalI = i;
+                    final int finalJ = j;
+                    tablero.descubrirCasilla(finalI, finalJ);
+                    assertThrows(CasillaYaDescubiertaException.class, () -> tablero.descubrirCasilla(finalI, finalJ));
                     return;
                 }
             }

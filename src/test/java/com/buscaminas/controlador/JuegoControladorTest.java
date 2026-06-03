@@ -19,7 +19,7 @@ class JuegoControladorTest {
         // Suponiendo que la casilla A1 (0,0) no es mina (aleatorio, podría fallar)
         // Para mayor certeza, se podría usar un tablero con semilla fija, pero aquí asumimos que el test se repite y eventualmente pasa.
         // Alternativa: buscar una casilla sin mina mediante el tablero.
-        Tablero t = controlador.tablero; // Necesitamos acceso; agregar getter o hacer el atributo public para test (no recomendado).
+        Tablero t = controlador.getTablero(); // Necesitamos acceso; agregar getter o hacer el atributo public para test (no recomendado).
         // Mejor: refactorizar JuegoControlador para permitir inyección de un tablero de prueba.
         // Como no tenemos eso, probaremos un comando que sabemos que no es mina (riesgo). O usamos un tablero controlado.
         // Para simplificar la demostración, probaremos que lanza excepción con coordenadas malformadas.

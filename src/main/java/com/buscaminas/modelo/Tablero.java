@@ -1,9 +1,12 @@
 package main.java.com.buscaminas.modelo;
 
 import java.util.Random;
-impor
+import java.io.Serializable;
+import main.java.com.buscaminas.excepciones.CasillaYaDescubiertaException;
 
-public class Tablero {
+public class Tablero implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private static final int TAMANO = 10;
     private static final int TOTAL_MINAS = 10;
     private Casilla[][] casillas;

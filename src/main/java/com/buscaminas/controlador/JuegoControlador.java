@@ -45,7 +45,7 @@ public class JuegoControlador {
         }
     }
 
-    private void procesarComando(String input) throws CoordenadaInvalidaException, CasillaYaDescubiertaException {
+    public void procesarComando(String input) throws CoordenadaInvalidaException, CasillaYaDescubiertaException {
         boolean esMarcar = input.toUpperCase().startsWith("M");
         String coord = esMarcar ? input.substring(1) : input;
         if (coord.length() < 2) throw new CoordenadaInvalidaException("Formato inválido");
@@ -70,5 +70,9 @@ public class JuegoControlador {
         Tablero t = gestor.cargarPartida();
         if (t != null) { tablero = t; vista.mostrarMensaje("Partida cargada."); }
         else vista.mostrarMensaje("No se pudo cargar.");
+    }
+
+    public Tablero getTablero() {
+        return tablero;
     }
 }
