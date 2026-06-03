@@ -161,10 +161,10 @@ public class JuegoControlador {
         boolean regresar = false;
         while (!regresar) {
             vista.mostrarMensaje("=== CREADORES ===");
-            vista.mostrarMensaje("Milena");
-            vista.mostrarMensaje("Jossenlin");
-            vista.mostrarMensaje("Wilson Morillo");
-            vista.mostrarMensaje("Cristopher");
+            vista.mostrarMensaje("JAZMIN MILENA HERNANDEZ CHERE");
+            vista.mostrarMensaje("JOSSELIN ANDREA GUAJALA IZQUIERDO");
+            vista.mostrarMensaje("MORILLO ESTRADA WILSON HAROLD");
+            vista.mostrarMensaje("CRISTOPHER GABRIEL PILOZO VELASQUEZ");
             vista.mostrarMensaje("");
             vista.mostrarMensaje("R. Regresar");
             System.out.print("> ");
