@@ -1,7 +1,6 @@
 package main.java.com.buscaminas.controlador;
 
 import main.java.com.buscaminas.modelo.Tablero;
-import main.java.com.buscaminas.controlador.JuegoControlador;
 import main.java.com.buscaminas.vista.VistaConsola;
 import main.java.com.buscaminas.excepciones.*;
 import main.java.com.buscaminas.persistencia.GestorArchivos;
@@ -21,20 +20,59 @@ public class JuegoControlador {
     }
 
     public void iniciar() {
-        vista.mostrarMensaje("=== BUSCAMINAS ===");
         boolean salir = false;
-        while (!salir && !tablero.isJuegoTerminado()) {
+        while (!salir) {
+            vista.mostrarMensaje("=== MENÚ DE VIDEOJUEGO ===");
+            vista.mostrarMensaje("1. Jugar Partida");
+            vista.mostrarMensaje("2. Cargar Partidas");
+            vista.mostrarMensaje("3. Creadores del Juego");
+            vista.mostrarMensaje("4. Salir");
+            System.out.print("> ");
+            String input = scanner.nextLine().trim();
+            switch (input) {
+                case "1":
+                    jugar(new Tablero());
+                    break;
+                case "2":
+                    cargarPartidaMenu();
+                    break;
+                case "3":
+                    mostrarCreadores();
+                    break;
+                case "4":
+                    salir = true;
+                    vista.mostrarMensaje("¡Hasta luego!");
+                    break;
+                default:
+                    vista.mostrarMensaje("Opción inválida. Intente de nuevo.");
+            }
+        }
+    }
+
+    private void jugar(Tablero t) {
+        this.tablero = t;
+        vista.mostrarMensaje("=== BUSCAMINAS ===");
+        boolean regresar = false;
+        while (!regresar && !tablero.isJuegoTerminado()) {
             vista.mostrarTablero(tablero, false);
             vista.mostrarAyuda();
             System.out.print("> ");
             String input = scanner.nextLine().trim();
             switch (input.toUpperCase()) {
-                case "S": salir = true; vista.mostrarMensaje("¡Hasta luego!"); break;
-                case "G": guardarPartida(); break;
-                case "C": cargarPartida(); break;
+                case "S":
+                    regresar = true;
+                    vista.mostrarMensaje("Regresando al menú principal.");
+                    break;
+                case "G":
+                    guardarPartidaMenu();
+                    break;
+                case "C":
+                    cargarPartidaMenuDuranteJuego();
+                    break;
                 default:
-                    try { procesarComando(input); }
-                    catch (CoordenadaInvalidaException | CasillaYaDescubiertaException e) {
+                    try {
+                        procesarComando(input);
+                    } catch (CoordenadaInvalidaException | CasillaYaDescubiertaException e) {
                         vista.mostrarMensaje("Error: " + e.getMessage());
                     }
             }
@@ -42,6 +80,100 @@ public class JuegoControlador {
         if (tablero.isJuegoTerminado()) {
             vista.mostrarTablero(tablero, true);
             vista.mostrarMensaje(tablero.isVictoria() ? "¡VICTORIA!" : "¡BOOM! Has perdido.");
+            vista.mostrarMensaje("Presione Enter para regresar al menú principal...");
+            scanner.nextLine();
+        }
+    }
+
+    private void guardarPartidaMenu() {
+        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        vista.mostrarMensaje("=== ESTADO DE GUARDADO ===");
+        for (int i = 1; i <= 3; i++) {
+            main.java.com.buscaminas.modelo.PartidaGuardada pg = gestor.cargarDatosPartida(i);
+            if (pg != null) {
+                vista.mostrarMensaje("  Slot " + i + ": " + pg.getFechaGuardado().format(formatter));
+            } else {
+                vista.mostrarMensaje("  Slot " + i + ": (Vacío)");
+            }
+        }
+        int slotUsado = gestor.guardarPartidaAuto(tablero);
+        if (slotUsado > 0) {
+            vista.mostrarMensaje("Partida guardada en Slot " + slotUsado + ".");
+        } else {
+            vista.mostrarMensaje("Error al guardar la partida.");
+        }
+    }
+
+    private void cargarPartidaMenu() {
+        Tablero t = obtenerPartidaDeMenu();
+        if (t != null) {
+            jugar(t);
+        }
+    }
+
+    private void cargarPartidaMenuDuranteJuego() {
+        Tablero t = obtenerPartidaDeMenu();
+        if (t != null) {
+            this.tablero = t;
+            vista.mostrarMensaje("Partida cargada.");
+        }
+    }
+
+    private Tablero obtenerPartidaDeMenu() {
+        boolean regresar = false;
+        while (!regresar) {
+            vista.mostrarMensaje("=== SLOTS DE CARGA ===");
+            for (int i = 1; i <= 3; i++) {
+                main.java.com.buscaminas.modelo.PartidaGuardada pg = gestor.cargarDatosPartida(i);
+                if (pg != null) {
+                    java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+                    String fechaStr = pg.getFechaGuardado().format(formatter);
+                    vista.mostrarMensaje(i + ". Slot " + i + " (Guardada el " + fechaStr + ")");
+                } else {
+                    vista.mostrarMensaje(i + ". Slot " + i + " (Vacío)");
+                }
+            }
+            vista.mostrarMensaje("R. Regresar");
+            System.out.print("> ");
+            String input = scanner.nextLine().trim().toUpperCase();
+            if (input.equals("R")) {
+                return null;
+            } else if (input.equals("1") || input.equals("2") || input.equals("3")) {
+                int slot = Integer.parseInt(input);
+                if (!gestor.existePartida(slot)) {
+                    vista.mostrarMensaje("El Slot " + slot + " está vacío.");
+                } else {
+                    Tablero t = gestor.cargarPartida(slot);
+                    if (t != null) {
+                        return t;
+                    } else {
+                        vista.mostrarMensaje("Error al cargar la partida.");
+                    }
+                }
+            } else {
+                vista.mostrarMensaje("Opción inválida.");
+            }
+        }
+        return null;
+    }
+
+    private void mostrarCreadores() {
+        boolean regresar = false;
+        while (!regresar) {
+            vista.mostrarMensaje("=== CREADORES ===");
+            vista.mostrarMensaje("Milena");
+            vista.mostrarMensaje("Jossenlin");
+            vista.mostrarMensaje("Wilson");
+            vista.mostrarMensaje("Cristopher");
+            vista.mostrarMensaje("");
+            vista.mostrarMensaje("R. Regresar");
+            System.out.print("> ");
+            String input = scanner.nextLine().trim().toUpperCase();
+            if (input.equals("R")) {
+                regresar = true;
+            } else {
+                vista.mostrarMensaje("Opción inválida.");
+            }
         }
     }
 
@@ -59,17 +191,6 @@ public class JuegoControlador {
             throw new CoordenadaInvalidaException("Coordenada fuera del tablero");
         if (esMarcar) tablero.marcarCasilla(fila, columna);
         else tablero.descubrirCasilla(fila, columna);
-    }
-
-    private void guardarPartida() {
-        if (gestor.guardarPartida(tablero)) vista.mostrarMensaje("Partida guardada.");
-        else vista.mostrarMensaje("Error al guardar.");
-    }
-
-    private void cargarPartida() {
-        Tablero t = gestor.cargarPartida();
-        if (t != null) { tablero = t; vista.mostrarMensaje("Partida cargada."); }
-        else vista.mostrarMensaje("No se pudo cargar.");
     }
 
     public Tablero getTablero() {
