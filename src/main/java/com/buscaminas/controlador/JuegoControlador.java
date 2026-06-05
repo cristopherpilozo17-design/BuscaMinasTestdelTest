@@ -1,10 +1,10 @@
 package main.java.com.buscaminas.controlador;
 
-import main.java.com.buscaminas.modelo.Tablero;
-import main.java.com.buscaminas.vista.VistaConsola;
-import main.java.com.buscaminas.excepciones.*;
-import main.java.com.buscaminas.persistencia.GestorArchivos;
 import java.util.Scanner;
+import main.java.com.buscaminas.excepciones.*;
+import main.java.com.buscaminas.modelo.Tablero;
+import main.java.com.buscaminas.persistencia.GestorArchivos;
+import main.java.com.buscaminas.vista.VistaConsola;
 
 public class JuegoControlador {
     private Tablero tablero;
@@ -161,10 +161,10 @@ public class JuegoControlador {
         boolean regresar = false;
         while (!regresar) {
             vista.mostrarMensaje("=== CREADORES ===");
-            vista.mostrarMensaje("Milena");
-            vista.mostrarMensaje("Jossenlin");
-            vista.mostrarMensaje("Wilson");
-            vista.mostrarMensaje("Cristopher");
+            vista.mostrarMensaje("JAZMIN MILENA HERNANDEZ CHERE");
+            vista.mostrarMensaje("JOSSELIN ANDREA GUAJALA IZQUIERDO");
+            vista.mostrarMensaje("MORILLO ESTRADA WILSON HAROLD");
+            vista.mostrarMensaje("CRISTOPHER GABRIEL PILOZO VELASQUEZ");
             vista.mostrarMensaje("");
             vista.mostrarMensaje("R. Regresar");
             System.out.print("> ");
