@@ -60,7 +60,7 @@ public class VistaConsola {
     public void mostrarAyuda() {
         System.out.println("\n=== AYUDA ===");
         System.out.println("A5   -> Descubrir casilla");
-        System.out.println("MA5  -> Marcar o desmarcar casilla");
+        System.out.println("MA5  -> Marcar casilla");
         System.out.println("G    -> Guardar partida");
         System.out.println("C    -> Cargar partida");
         System.out.println("S    -> Salir");
